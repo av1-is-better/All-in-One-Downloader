@@ -1,44 +1,70 @@
-# Configure /config/rclone.conf
-# keep remote name Google:
+# All-in-One Downloader  
 
-# Running Locally
+**All-in-One Downloader** is a Docker-based solution that combines multiple downloading and file management tools into a single container. With **Caddy** as a reverse proxy, all services are accessible through a single exposed port, making setup and access simple and efficient.  
 
-1. Building Image
+## Features  
+
+- **Homepage (`/`)** – A dashboard listing all available tools for easy navigation.  
+- **AriaNG (`/app/aria`)** – A modern web-based frontend for Aria2, supporting HTTP, FTP, and BitTorrent downloads.  
+- **qBittorrent (`/app/qbit`)** – A feature-rich BitTorrent client with a web interface.  
+- **File Browser (`/app/files`)** – A lightweight file manager accessible via the web.  
+- **ttyd (`/app/ttyd`)** – A web-based terminal for accessing the container’s shell.  
+- **Rclone WebUI (`/app/rclone`)** – A graphical interface for managing and syncing cloud storage.  
+
+## Prerequisites  
+
+Ensure you have the following installed:  
+
+- [Docker](https://www.docker.com/get-started)  
+- [Docker Compose](https://docs.docker.com/compose/install/)  
+
+## Configuration  
+
+### 1. Rclone Setup  
+- Create or update `rclone.conf` in the `/config` directory.  
+- Ensure the remote name matches `Google:` or any configured cloud storage.  
+
+### 2. Environment Variables  
+Modify the `docker-compose.yml` file to configure:  
+- **PORT** – The single port exposed by Caddy for all services.  
+- **GLOBAL_PASSWORD** – A password to secure access.  
+
+## Installation & Usage  
+
+### 1. Build the Docker Image  
+```sh
 docker build -t aio-downloader .
+```
 
-# Set Environment Variable PORT and GLOBAL_PASSWORD
-vi docker-compose.yml
+### 2. Start the Container  
+```sh
+docker compose up -d
+```
 
-# Running the Container
-sudo docker compose up -d
+## Accessing the Applications  
 
+Once the container is running, access the services via a browser:  
 
-# Ports within docker container (no need to expose these ports)
-61801 - rclone
-61802 - ttyd
-61803 - FileBrowser
-61804 - Qbit
-61805 - aria-rpc
+| Service | URL |
+|---------|-----|
+| **Homepage (Dashboard)** | `http://<your-server-ip>:<PORT>/` |
+| **Rclone WebUI** | `http://<your-server-ip>:<PORT>/app/rclone` |
+| **AriaNG** | `http://<your-server-ip>:<PORT>/app/aria` |
+| **File Browser** | `http://<your-server-ip>:<PORT>/app/files` |
+| **qBittorrent** | `http://<your-server-ip>:<PORT>/app/qbit` |
+| **ttyd (Terminal)** | `http://<your-server-ip>:<PORT>/app/ttyd` |
 
-# URL PATHS
-1. /app/rclone - rclone rcd webui
-2. /app/aria - ariang webui
-3. /app/files - filebrowser webui
-4. /app/qbit - qbittorrent webui
-5. /app/ttyd - ttyd webui
+Replace `<your-server-ip>` with your actual server address and `<PORT>` with the value set in `docker-compose.yml`.  
 
+## Security  
 
-# Environment Variable
-1. GLOBAL_PASSWORD = <password for accesing all web services>
-2. PORT = <port on which caddy will run> (expose this port)
+- **Single Authentication:** The `GLOBAL_PASSWORD` environment variable secures all services behind a single login.  
+- **Only One Exposed Port:** Thanks to **Caddy**, all applications are accessible through a single port.  
 
+## Contributing  
 
-# OBFUSCATED BIN NAMES
-MUw428 = aria2
-tR2TdY = filebrowser
-zeDA1p = qbitnox
-PKpA10 = rclone
-uG37Yq = ttyd
+Contributions are welcome! If you find any issues or have suggestions, open an issue or submit a pull request on the [GitHub repository](https://github.com/av1-is-better/All-in-One-Downloader).  
 
-# Heroku Deployment (Do Not Deploy Your Account Will Be Banned)
-https://dashboard.heroku.com/new?template=https://github.com/av1-is-better/All-in-One-Downloader
+## License  
+
+This project is licensed under the [MIT License](LICENSE).
