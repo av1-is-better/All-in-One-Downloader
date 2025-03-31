@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #121212;
+            color: #ffffff;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            margin-top: 20px;
+            text-align: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+		.footer {
+			margin-top:20px
+		}
+        .link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background-color: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 15px;
+            transition: background 0.3s;
+        }
+        .link:hover {
+            background-color: #444;
+        }
+        .full-width {
+            grid-column: span 2;
+            width: 95%;
+        }
+        .icon {
+            margin-right: 10px;
+        }
+        .desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+            grid-column: span 2;
+            text-align: center;
+        }
+        img {
+            width: 50px;
+        }
+        @media (max-width: 600px) {
+            .container {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+	<script>
+	function openLink() {
+		window.open("https://github.com/av1-is-better/All-in-One-Downloader", "_blank");
+	}
+	</script>
+</head>
+<body>
+    <h1>All in One</h1>
+    <p style="margin-top:-10px">DOWNLOADER</p>
+    <div class="container">
+        <a class="link" href="../app/aria" target="_blank">
+            <span>Ariang</span>
+            <img src="./icons/aria.ico" />
+        </a>
+        <a class="link" href="../app/qbit" target="_blank">
+            <span>qBittorrent</span>
+            <img src="./icons/qbit.ico" />
+        </a>
+        <a class="link" href="../app/rclone" target="_blank">
+            <span>Rclone</span>
+            <img src="./icons/rclone.png" />
+        </a>
+        <a class="link" href="../app/files" target="_blank">
+            <span>FileBrowser</span>
+            <img src="./icons/filebrowser.png" />
+        </a>
+        <a class="link full-width" href="../app/ttyd" target="_blank">
+            <span>TTYD Terminal</span>
+            <img src="./icons/ttyd.png" />
+        </a>
+    </div>
+	<div class="footer">
+		<p onclick="openLink()" style="font-size:14px;color:white;">Developed by <b>Kunal Yadav</b></p>
+	</div>
+</body>
+</html>

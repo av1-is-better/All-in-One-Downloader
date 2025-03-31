@@ -1,7 +1,7 @@
 services:
   app:
     image: aio-downloader:latest  # Replace with your actual image
-    container_name: my-heroku-app
+    container_name: aio
     environment:
       - PORT=61800
       - GLOBAL_PASSWORD=MYPASS123

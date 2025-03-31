@@ -45,6 +45,10 @@ RUN mkdir -p /app/downloads/.torrent
 RUN mkdir -p /var/www/aria
 COPY ariang/ /var/www/aria/
 
+# Copying homer
+RUN mkdir -p /var/www/homer
+COPY homer/ /var/www/homer/
+
 # Crating /app/.temp dir for temporary purposes like storing
 # links and list of files/folders that needs to be uploaded
 RUN mkdir -p /app/.temp

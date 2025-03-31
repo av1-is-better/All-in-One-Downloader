@@ -9,7 +9,13 @@ encode gzip
 
 # Configure Root
 handle / {
-        redir / https://google.com
+        redir / /home/
+}
+
+handle /home* {
+        uri strip_prefix /home
+        root * /var/www/homer
+        file_server
 }
 
 # Configure ttyd
