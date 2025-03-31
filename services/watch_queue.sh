@@ -70,6 +70,7 @@ while true; do
   "srcRemote": "$FILE_NAME",
   "dstFs": "$REMOTE_PATH",
   "dstRemote": "$FILE_NAME",
+  "_async": true,
   "opt": {
     "drive-upload-cutoff": "1000T",
     "buffer-size": "4M",
@@ -96,6 +97,7 @@ EOF
 {
   "srcFs": "$DIR_PATH",
   "dstFs": "${REMOTE_PATH}${BASE_NAME}/",
+  "_async": true,
   "opt": {
     "drive-upload-cutoff": "1000T",
     "buffer-size": "4M",
