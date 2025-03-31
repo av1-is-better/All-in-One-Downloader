@@ -20,9 +20,10 @@ Ensure you have the following installed:
 
 ## Configuration  
 
-### 1. Rclone Setup  
-- Create or update `rclone.conf` in the `/config` directory.  
-- Ensure the remote name matches `Google:` or any configured cloud storage.  
+### 1. Rclone Setup (Important!)  
+- Modify `config/rclone.conf` to add your **Rclone remote storage configuration**.  
+- **Do not change the remote name** – it must remain **Google:**  
+  > ⚠ **Warning:** Changing the remote name from `Google:` will break the upload functionality.  
 
 ### 2. Environment Variables  
 Modify the `docker-compose.yml` file to configure:  
@@ -67,4 +68,4 @@ Contributions are welcome! If you find any issues or have suggestions, open an i
 
 ## License  
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).  
