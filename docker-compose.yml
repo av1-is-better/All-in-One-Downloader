@@ -1,0 +1,10 @@
+services:
+  app:
+    image: aio-downloader:latest  # Replace with your actual image
+    container_name: my-heroku-app
+    environment:
+      - PORT=61800
+      - GLOBAL_PASSWORD=MYPASS123
+    ports:
+      - "61800:61800"
+    restart: unless-stopped

@@ -1,0 +1,44 @@
+# Configure /config/rclone.conf
+# keep remote name Google:
+
+# Running Locally
+
+1. Building Image
+docker build -t aio-downloader .
+
+# Set Environment Variable PORT and GLOBAL_PASSWORD
+vi docker-compose.yml
+
+# Running the Container
+sudo docker compose up -d
+
+
+# Ports within docker container (no need to expose these ports)
+61801 - rclone
+61802 - ttyd
+61803 - FileBrowser
+61804 - Qbit
+61805 - aria-rpc
+
+# URL PATHS
+1. /app/rclone - rclone rcd webui
+2. /app/aria - ariang webui
+3. /app/files - filebrowser webui
+4. /app/qbit - qbittorrent webui
+5. /app/ttyd - ttyd webui
+
+
+# Environment Variable
+1. GLOBAL_PASSWORD = <password for accesing all web services>
+2. PORT = <port on which caddy will run> (expose this port)
+
+
+# OBFUSCATED BIN NAMES
+MUw428 = aria2
+tR2TdY = filebrowser
+zeDA1p = qbitnox
+PKpA10 = rclone
+uG37Yq = ttyd
+
+# Heroku Deployment (Do Not Deploy Your Account Will Be Banned)
+https://dashboard.heroku.com/new?template=https://github.com/av1-is-better/All-in-One-Downloader

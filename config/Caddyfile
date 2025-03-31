@@ -1,0 +1,54 @@
+{
+        log {
+                exclude http.handlers.reverse_proxy
+        }
+}
+
+:{$PORT}
+encode gzip
+
+# Configure Root
+handle / {
+        redir / https://google.com
+}
+
+# Configure ttyd
+handle /app/rclone* {
+        redir /app/rclone /app/rclone/
+        uri strip_prefix /app/rclone           
+        reverse_proxy * localhost:61801
+}
+
+# Configure ttyd
+handle /app/ttyd* {
+        redir /app/ttyd /app/ttyd/
+        uri strip_prefix /app/ttyd           
+        reverse_proxy * localhost:61802
+}
+
+# Configure Filebrowser
+handle /app/files* {
+        redir /app/files /app/files/
+        reverse_proxy * localhost:61803
+}
+
+# Configure qbittorrent
+handle /app/qbit* {
+        redir /app/qbit /app/qbit/         
+        uri strip_prefix /app/qbit
+        reverse_proxy * localhost:61804
+}
+
+# Configure Aria(Web UI)
+handle /app/aria* {
+        redir /app/aria /app/aria/
+        uri strip_prefix /app/aria
+        root * /var/www/aria
+        file_server
+}
+
+# Configure Aria-RPC
+handle /app/rpc* {
+        uri strip_prefix /app/rpc
+        reverse_proxy * localhost:61805
+}

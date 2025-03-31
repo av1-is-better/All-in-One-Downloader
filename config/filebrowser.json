@@ -1,0 +1,19 @@
+{
+  "port": 61803,
+  "baseURL": "/app/files",
+  "address": "127.0.0.1",
+  "log": "stdout",
+  "database": "/app/config/filebrowser.db",
+  "root": "/app",
+  "auth": {
+    "method": "bcrypt",
+    "salt": "random_salt_string"
+  },
+  "branding": {
+    "name": "File Manager",
+    "disableExternal": false
+  },
+  "commands": [],
+  "lockPassword": false
+}
+
