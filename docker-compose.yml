@@ -1,10 +1,12 @@
 services:
   app:
     image: aio-downloader:latest  # Replace with your actual image
-    container_name: aio
+    container_name: all-in-one
     environment:
       - PORT=61800
-      - GLOBAL_PASSWORD=MYPASS123
+      - GLOBAL_PASSWORD=mypass123
+    volumes:
+      - /home/ubuntu/downloads:/app/downloads # optional
     ports:
       - "61800:61800"
-    restart: unless-stopped
+    restart: always

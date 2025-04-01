@@ -71,11 +71,11 @@ while true; do
   "dstFs": "$REMOTE_PATH",
   "dstRemote": "$FILE_NAME",
   "_async": true,
-  "opt": {
-    "drive-upload-cutoff": "1000T",
-    "buffer-size": "4M",
-    "ignoreExisting": true,
-    "sizeOnly": true
+  "_config": {
+    "BufferSize": "96M",
+    "IgnoreExisting": true,
+    "SizeOnly": true,
+    "Retries": 999
   }
 }
 EOF
@@ -98,13 +98,13 @@ EOF
   "srcFs": "$DIR_PATH",
   "dstFs": "${REMOTE_PATH}${BASE_NAME}/",
   "_async": true,
-  "opt": {
-    "drive-upload-cutoff": "1000T",
-    "buffer-size": "4M",
-    "ignoreExisting": true,
-    "sizeOnly": true,
-    "transfers": 3,
-    "checkers": 4
+  "_config": {
+    "BufferSize": "96M",
+    "IgnoreExisting": true,
+    "SizeOnly": true,
+    "Retries": 999,
+    "Transfers": 2,
+    "Checkers": 4
   }
 }
 EOF
