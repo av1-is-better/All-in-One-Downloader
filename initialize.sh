@@ -80,5 +80,5 @@ if [ ! -f "$FILEBROWSER_DB" ]; then
     /usr/bin/tR2TdY users add admin "$GLOBAL_PASSWORD" --perm.admin --config "$FILEBROWSER_CONFIG"
 else
     echo "Updating Filebrowser admin password..."
-    /usr/bin/tR2TdY users update admin "$GLOBAL_PASSWORD" --config "$FILEBROWSER_CONFIG"
+    /usr/bin/tR2TdY users update admin --password "$GLOBAL_PASSWORD" --config "$FILEBROWSER_CONFIG"
 fi
