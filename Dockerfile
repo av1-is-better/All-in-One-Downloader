@@ -1,7 +1,7 @@
 FROM python:3.11-alpine
 
 # Install required packages
-RUN apk add --no-cache \
+RUN apk update && apk add --no-cache \
     bash \
     build-base \
     p7zip \
@@ -10,16 +10,31 @@ RUN apk add --no-cache \
     curl \
     ttyd \
     caddy \
-    jq
+    jq \
+    rclone \
+    qbittorrent-nox \
+    aria2
+
+# Installing File Browser
+RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 
 # Copy all bin files to /usr/bin/
 COPY bin/ /usr/bin/
+
+# Creating Symbolic Link with Obfuscated Names
+RUN ln -s "/usr/bin/qbittorrent-nox" "/usr/bin/zeDA1p" #qb
+RUN ln -s "/usr/local/bin/filebrowser" "/usr/bin/tR2TdY" #fb
+RUN ln -s "/usr/bin/rclone" "/usr/bin/PKpA10" #rc
+RUN ln -s "/usr/bin/aria2c" "/usr/bin/MUw428" #ar
+RUN ln -s "/usr/bin/ttyd" "/usr/bin/uG37Yq" #tty
+
 RUN chmod +x /usr/bin/zeDA1p #qb
 RUN chmod +x /usr/bin/tR2TdY #fb
 RUN chmod +x /usr/bin/PKpA10 #rc
 RUN chmod +x /usr/bin/MUw428 #ar
+RUN chmod +x /usr/bin/uG37Yq #tty
+
 RUN chmod +x /usr/bin/generate_qbit_hash.py #py
-RUN mv /usr/bin/ttyd /usr/bin/uG37Yq #tty
 
 # Create a directory for the application
 WORKDIR /app
