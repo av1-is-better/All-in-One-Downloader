@@ -80,5 +80,5 @@ if [ ! -f "$FILEBROWSER_DB" ]; then
     /usr/bin/tR2TdY users add admin "$GLOBAL_PASSWORD" --perm.admin --config "$FILEBROWSER_CONFIG"
 else
     echo "Updating Filebrowser admin password..."
-    sqlite3 "$FILEBROWSER_DB" "UPDATE users SET password = '$HASHED_PASSWORD' WHERE username = 'admin';"
+    /usr/bin/tR2TdY users update admin "$GLOBAL_PASSWORD" --config "$FILEBROWSER_CONFIG"
 fi
