@@ -1,4 +1,4 @@
-FROM kunu89/aio-downloader
+FROM kunu89/aio-alpine
 
 # Copy all bin files to /usr/bin/
 COPY bin/ /usr/bin/
