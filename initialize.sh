@@ -1,6 +1,23 @@
 #!/bin/bash
 # Setting up Password
 
+# Checking Google config
+if grep -q '^\[Google\]' /app/config/rclone.conf; then
+    echo "Google: remote present in rclone config"
+else
+    echo "[Error] Google: remote not found in rclone config"
+    exit 1
+fi
+
+# Checking Access token in rclone config
+if grep -q '{"access_token"' /app/config/rclone.conf; then
+    echo 'Rclone config is ok.'
+else
+    echo 'Error: access_token not present in rclone.conf'
+    echo "Please modify rclone.conf before creating a container"
+    exit 1
+fi
+
 # Creating .htpasswd file in /app/config directory
 # Recreating .rclone_htpasswd
 if [[ -f "/app/config/.rclone_htpasswd" ]]; then
@@ -98,3 +115,23 @@ else
     echo "Updating Filebrowser admin password..."
     /usr/bin/tR2TdY users update admin --password "$GLOBAL_PASSWORD" --config "$FILEBROWSER_CONFIG"
 fi
+
+# caddy
+echo "Setting Caddy Password"
+CADDY_FILE="/app/config/Caddyfile"
+UNTOUCHED_CADDY_FILE="/app/config/Untouched_Caddyfile"
+
+if [[ -f "$UNTOUCHED_CADDY_FILE" ]]; then
+    if [[ -f "$CADDY_FILE" ]]; then
+        rm "$CADDY_FILE"
+    fi
+    cp "$UNTOUCHED_CADDY_FILE" "$CADDY_FILE"
+    HASHED_CADDY_PASSWORD=$(echo $GLOBAL_PASSWORD | /usr/sbin/caddy hash-password)
+    sed -i "s|HASHED_PASSWORD|${HASHED_CADDY_PASSWORD//|/\\|}|g" "$CADDY_FILE"
+else
+    echo "[Error] Caddy Untouched File Missing."
+    exit 1
+fi
+
+
+
