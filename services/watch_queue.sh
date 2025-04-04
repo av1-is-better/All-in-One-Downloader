@@ -61,6 +61,23 @@ while true; do
                 echo "[Queue Watchdog] File Detected: $line" >> $LOG_FILE
                 BASE_DIR=$(dirname "$line")
                 FILE_NAME=$(basename "$line")
+                # Checking Whether it's a TV Show or Movie
+                if echo $FILE_NAME | tr '[:upper:]' '[:lower:]' | grep -E '480p|720p|1080p|2160p|web(-dl|rip)?|bluray|ddp2\.0|ddp5\.1|x265|h\.264|hevc|h264|remux|h 264|h265'; then
+                    if echo $FILE_NAME | grep -q -E 'S[0-9]{1,3}E' || echo $FILE_NAME | grep -q -E 'S[0-9]{1,3}'; then
+                        # This is a TV Show (Uploading in a Folder Named T)
+                        REMOTE_PATH="Google:T"
+                    elif echo $FILE_NAME | grep -q -E '\.[0-9]{1,4}\.' || echo $FILE_NAME | grep -q -E '\.[0-9]{1,4}' || echo $FILE_NAME | grep -q -E ' [0-9]{1,4} ' || echo $FILE_NAME | grep -q -E ' [0-9]{1,4}'; then
+                        # This is a Movie (Uploading in a Folder Named M)
+                        REMOTE_PATH="Google:M"
+                    else
+                        # Uploading in Root Path
+                        REMOTE_PATH="Google:"
+                    fi
+                else
+                    # Uploading in Root Path
+                    REMOTE_PATH="Google:"
+                fi
+
                 # Make API request
                 curl -u "${RCLONE_USERNAME}:${RCLONE_PASSWORD}" -X POST "http://127.0.0.1:61801/operations/movefile" \
                     -H "Content-Type: application/json" \
@@ -89,6 +106,22 @@ EOF
                 DIR_PATH="$line"
                 BASE_NAME=$(basename "${line}")
                 MODE="move"
+                # Checking Whether it's a TV Show or Movie
+                if echo $BASE_NAME | tr '[:upper:]' '[:lower:]' | grep -E '480p|720p|1080p|2160p|web(-dl|rip)?|bluray|ddp2\.0|ddp5\.1|x265|h\.264|hevc|h264|remux|h 264|h265'; then
+                    if echo $BASE_NAME | grep -q -E 'S[0-9]{1,3}E' || echo $BASE_NAME | grep -q -E 'S[0-9]{1,3}'; then
+                        # This is a TV Show (Uploading in a Folder Named T)
+                        REMOTE_PATH="Google:T/"
+                    elif echo $BASE_NAME | grep -q -E '\.[0-9]{1,4}\.' || echo $BASE_NAME | grep -q -E '\.[0-9]{1,4}' || echo $BASE_NAME | grep -q -E ' [0-9]{1,4} ' || echo $BASE_NAME | grep -q -E ' [0-9]{1,4}'; then
+                        # This is a Movie (Uploading in a Folder Named M)
+                        REMOTE_PATH="Google:M/"
+                    else
+                        # Uploading in Root Path
+                        REMOTE_PATH="Google:"
+                    fi
+                else
+                    # Uploading in Root Path
+                    REMOTE_PATH="Google:"
+                fi
 
                 # Make API request
                 curl -u "${RCLONE_USERNAME}:${RCLONE_PASSWORD}" -X POST "http://127.0.0.1:61801/sync/${MODE}" \
