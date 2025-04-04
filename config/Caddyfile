@@ -12,6 +12,7 @@ handle / {
         redir / /home/
 }
 
+# Configure Home
 handle /home* {
         basicauth {
                 admin HASHED_PASSWORD
@@ -21,7 +22,7 @@ handle /home* {
         file_server
 }
 
-# Configure ttyd
+# Configure rclone
 handle /app/rclone* {
         redir /app/rclone /app/rclone/
         uri strip_prefix /app/rclone           
@@ -30,6 +31,9 @@ handle /app/rclone* {
 
 # Configure ttyd
 handle /app/ttyd* {
+        basicauth {
+                admin HASHED_PASSWORD
+        }
         redir /app/ttyd /app/ttyd/
         uri strip_prefix /app/ttyd           
         reverse_proxy * localhost:61802
