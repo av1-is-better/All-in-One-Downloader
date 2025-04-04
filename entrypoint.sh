@@ -35,6 +35,9 @@ for script in "$SCRIPT_DIR"/*.sh; do
     # Execute the script with nohup
     nohup "$script" >/dev/null 2>&1 &
 done
+echo "========================="
+echo "    Container Started    "
+echo "========================="
 
 # Keep the container alive
 while true; do
