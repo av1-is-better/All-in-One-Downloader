@@ -1,8 +1,17 @@
 #!/bin/bash
 # Setting up Password
 
+# Creating .htpasswd file in /app/config directory
+# Recreating .rclone_htpasswd
+if [[ -f "/app/config/.rclone_htpasswd" ]]; then
+    rm "/app/config/.rclone_htpasswd"
+fi
+/usr/bin/htpasswd -bc /app/config/.rclone_htpasswd admin "${GLOBAL_PASSWORD}"
+
 # qBit WebUI
 QBIT_CONFIG_FILE="/app/config/qBittorrent_qbittorrent/config/qBittorrent.conf"
+# Resetting Password in config file
+grep -q '^WebUI\\Password_PBKDF2=' "$QBIT_CONFIG_FILE" && sed -i 's|^WebUI\\Password_PBKDF2=.*|HASHPASSWORDHERE|' "$QBIT_CONFIG_FILE"
 # Check if "HASHPASSWORDHERE" exists in the file
 if grep -q "HASHPASSWORDHERE" "$QBIT_CONFIG_FILE"; then
     # Generate hashed password
@@ -20,6 +29,8 @@ fi
 
 # aria RPC config
 ARIA_CONFIG_FILE="/app/config/aria2.conf"
+# Resetting Password in config file
+grep -q '^rpc-secret=' $ARIA_CONFIG_FILE && sed -i 's|^rpc-secret=.*|GLOBALPASSWORDHERE|' $ARIA_CONFIG_FILE
 # Check if "GLOBALPASSWORDHERE" exists in the file
 if grep -q "GLOBALPASSWORDHERE" "$ARIA_CONFIG_FILE"; then
     # Generate hashed password
@@ -37,7 +48,12 @@ fi
 
 # ariang html (replacing port and RPC token in js file)
 ARIANG_JS_FILE="/var/www/aria/js/aria-ng-ff0f4540ce.min.js"
-if [[ -f $ARIANG_JS_FILE ]]; then
+UNTOUCHED_FILE="/var/www/aria/js/aria-ng-untouched.js"
+if [[ -f "$ARIANG_JS_FILE" ]]; then
+    if [[ -f "$UNTOUCHED_FILE" ]]; then
+        rm "$ARIANG_JS_FILE"
+        cp "$UNTOUCHED_FILE" "$ARIANG_JS_FILE"
+    fi
     # Setting PORT
     if grep -q "YOURPORTHERE" "$ARIANG_JS_FILE"; then
         if [ -n "$PORT" ]; then

@@ -1,5 +1,8 @@
 FROM kunu89/aio-alpine
 
+# Installing apache2 for htpasswd
+RUN apk add --no-cache apache2-utils
+
 # Copy all bin files to /usr/bin/
 COPY bin/ /usr/bin/
 
