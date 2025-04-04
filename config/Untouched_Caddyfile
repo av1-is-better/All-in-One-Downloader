@@ -24,9 +24,12 @@ handle /home* {
 
 # Configure rclone
 handle /app/rclone* {
+        basicauth {
+                admin HASHED_PASSWORD
+        }
         redir /app/rclone /app/rclone/
         uri strip_prefix /app/rclone           
-        reverse_proxy * localhost:61801
+        reverse_proxy * 127.0.0.1:61801
 }
 
 # Configure ttyd
