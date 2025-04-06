@@ -26,6 +26,10 @@ WORKDIR /app
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
+COPY VueTorrent.zip /app/VueTorrent.zip
+RUN unzip /app/VueTorrent.zip -d /app/
+RUN rm /app/VueTorrent.zip
+
 # Copying Script (Bash Scripts)
 RUN mkdir -p "/app/script"
 COPY script/ /app/script/
