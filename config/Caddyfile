@@ -1,84 +1,73 @@
-{
-	log {
-		exclude http.handlers.reverse_proxy
-	}
-}
-
 :{$PORT}
 encode gzip
 
-# === Global Basic Auth ===
-@secure {
-	path /*
-}
-handle @secure {
+route {
+	# Apply Basic Auth to everything inside this route
 	basicauth {
 		admin HASHED_PASSWORD
 	}
-}
 
-# === Routing starts after auth ===
+	# Configure Root
+	handle / {
+		redir / /home/
+	}
 
-# Configure Root
-handle / {
-	redir / /home/
-}
+	# Configure Home
+	handle /home* {
+		uri strip_prefix /home
+		root * /var/www/homer
+		file_server
+	}
 
-# Configure Home
-handle /home* {
-	uri strip_prefix /home
-	root * /var/www/homer
-	file_server
-}
+	# Configure rclone
+	handle /app/rclone* {
+		redir /app/rclone /app/rclone/
+		uri strip_prefix /app/rclone
+		reverse_proxy * 127.0.0.1:61801
+	}
 
-# Configure rclone
-handle /app/rclone* {
-	redir /app/rclone /app/rclone/
-	uri strip_prefix /app/rclone
-	reverse_proxy * 127.0.0.1:61801
-}
+	# Configure ttyd
+	handle /app/ttyd* {
+		redir /app/ttyd /app/ttyd/
+		uri strip_prefix /app/ttyd
+		reverse_proxy * localhost:61802
+	}
 
-# Configure ttyd
-handle /app/ttyd* {
-	redir /app/ttyd /app/ttyd/
-	uri strip_prefix /app/ttyd
-	reverse_proxy * localhost:61802
-}
+	# Configure Filebrowser
+	handle /app/files* {
+		redir /app/files /app/files/
+		reverse_proxy * localhost:61803
+	}
 
-# Configure Filebrowser
-handle /app/files* {
-	redir /app/files /app/files/
-	reverse_proxy * localhost:61803
-}
-
-# Configure qbittorrent
-handle /app/qbit* {
-	redir /app/qbit /app/qbit/
-	uri strip_prefix /app/qbit
-	reverse_proxy * localhost:61804
-}
-
-# Configure Vuetorrent
-handle /app/vue* {
-	redir /app/vue /app/vue/
-	uri strip_prefix /app/vue
-	handle /api* {
+	# Configure qbittorrent
+	handle /app/qbit* {
+		redir /app/qbit /app/qbit/
+		uri strip_prefix /app/qbit
 		reverse_proxy * localhost:61804
 	}
-	root * /app/VueTorrent/public
-	file_server
-}
 
-# Configure Aria(Web UI)
-handle /app/aria* {
-	redir /app/aria /app/aria/
-	uri strip_prefix /app/aria
-	root * /var/www/aria
-	file_server
-}
+	# Configure Vuetorrent
+	handle /app/vue* {
+		redir /app/vue /app/vue/
+		uri strip_prefix /app/vue
+		handle /api* {
+			reverse_proxy * localhost:61804
+		}
+		root * /app/VueTorrent/public
+		file_server
+	}
 
-# Configure Aria-RPC
-handle /app/rpc* {
-	uri strip_prefix /app/rpc
-	reverse_proxy * localhost:61805
+	# Configure Aria(Web UI)
+	handle /app/aria* {
+		redir /app/aria /app/aria/
+		uri strip_prefix /app/aria
+		root * /var/www/aria
+		file_server
+	}
+
+	# Configure Aria-RPC
+	handle /app/rpc* {
+		uri strip_prefix /app/rpc
+		reverse_proxy * localhost:61805
+	}
 }
