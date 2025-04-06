@@ -1,5 +1,5 @@
 # All-in-One Downloader  
-
+![Alt text](screenshot/image.png)
 **All-in-One Downloader** is a Docker-based solution that combines multiple downloading and file management tools into a single container. With **Caddy** as a reverse proxy, all services are accessible through a single exposed port, making setup and access simple and efficient.  
 
 ## Features  
