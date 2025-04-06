@@ -26,10 +26,6 @@ WORKDIR /app
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
-COPY VueTorrent.zip /app/VueTorrent.zip
-RUN unzip /app/VueTorrent.zip -d /var/www/
-RUN rm /app/VueTorrent.zip
-
 # Copying Script (Bash Scripts)
 RUN mkdir -p "/app/script"
 COPY script/ /app/script/
@@ -45,13 +41,20 @@ RUN mkdir -p /app/config
 COPY config/ /app/config/
 RUN mkdir -p /app/downloads/.torrent
 
+# Copying VueTorrent HTML
+COPY web-ui/vue-torrent.zip /app/vue-torrent.zip
+RUN unzip /app/vue-torrent.zip -d /var/www/
+RUN rm /app/vue-torrent.zip
+
 # Copying AriaNG-HTML
-RUN mkdir -p /var/www/aria
-COPY ariang/ /var/www/aria/
+COPY web-ui/ariang.zip /app/ariang.zip
+RUN unzip /app/ariang.zip -d /var/www/
+RUN rm /app/ariang.zip
 
 # Copying Rclone_RCD_WebUI-HTML
-RUN mkdir -p /var/www/rcd-webui
-COPY rcd-webui/ /var/www/rcd-webui/
+COPY web-ui/rcd-webui.zip /app/rcd-webui.zip
+RUN unzip /app/rcd-webui.zip -d /var/www/
+RUN rm /app/rcd-webui.zip
 
 # Copying homer
 RUN mkdir -p /var/www/homer
