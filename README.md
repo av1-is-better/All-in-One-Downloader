@@ -1,8 +1,7 @@
-# All-in-One Downloader  
 ![Alt text](screenshot/image.png)
 **All-in-One Downloader** is a Docker-based solution that combines multiple downloading and file management tools into a single container. With **Caddy** as a reverse proxy, all services are accessible through a single exposed port, making setup and access simple and efficient.  
 
-## Features  
+## Features   
 
 - **Homepage (`/`)** – A dashboard listing all available tools for easy navigation.  
 - **AriaNG (`/app/aria`)** – A modern web-based frontend for Aria2, supporting HTTP, FTP, and BitTorrent downloads.  
