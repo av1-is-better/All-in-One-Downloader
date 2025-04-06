@@ -76,6 +76,7 @@ route {
 		redir /app/rclone /app/rclone/
 		uri strip_prefix /app/rclone
 		handle /rcd* {
+			uri strip_prefix /rcd
 			reverse_proxy * localhost:61801
 		}
 		root * /var/www/rcd-webui
