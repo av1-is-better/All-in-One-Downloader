@@ -1,8 +1,7 @@
 #!/bin/bash
 
-QUEUE_FILE="/app/.temp/queue.txt"
-FINISHED_FILE="/app/.temp/finished.txt"
 LOG_FILE="/app/.temp/logs.txt"
+DB_PATH="/app/config/paths.db"
 
 RCLONE_USERNAME="admin"
 RCLONE_PASSWORD="${GLOBAL_PASSWORD}"
@@ -14,15 +13,6 @@ if [[ ! -f "$LOG_FILE" ]]; then
     touch "$LOG_FILE"
 fi
 
-# creating QUEUE file if not exist
-if [[ ! -f "$QUEUE_FILE" ]]; then
-    touch "$QUEUE_FILE"
-fi
-
-# creating FINISHED file if not exist
-if [[ ! -f "$FINISHED_FILE" ]]; then
-    touch "$FINISHED_FILE"
-fi
 
 echo "[Queue Watchdog] Started :-)" >> $LOG_FILE
 
@@ -42,18 +32,69 @@ check_rclone_activity() {
             echo "[Queue Watchdog] Rclone Job Completed" >> "$LOG_FILE"
             break
         fi
-        sleep 10
+        sleep 20
     done
+}
+
+call_upload_file_api() {
+    local RCLONE_USERNAME="$1"
+    local RCLONE_PASSWORD="$2"
+    local BASE_DIR="$3"
+    local FILE_NAME="$4"
+    local REMOTE_PATH="$5"
+
+    # Make API request
+    curl -u "${RCLONE_USERNAME}:${RCLONE_PASSWORD}" -X POST "http://127.0.0.1:61801/operations/movefile" \
+        -H "Content-Type: application/json" \
+        -d @- <<EOF
+{
+  "srcFs": "$BASE_DIR",
+  "srcRemote": "$FILE_NAME",
+  "dstFs": "$REMOTE_PATH",
+  "dstRemote": "$FILE_NAME",
+  "_async": true,
+  "_config": {
+    "BufferSize": "96M",
+    "IgnoreExisting": true,
+    "SizeOnly": true,
+    "Retries": 999
+  }
+}
+EOF
+}
+
+call_upload_folder_api() {
+    local RCLONE_USERNAME="$1"
+    local RCLONE_PASSWORD="$2"
+    local DIR_PATH="$3"
+    local REMOTE_PATH="$4"
+    local BASE_NAME="$5"
+    
+
+    curl -u "${RCLONE_USERNAME}:${RCLONE_PASSWORD}" -X POST "http://127.0.0.1:61801/sync/move" \
+        -H "Content-Type: application/json" \
+        -d @- <<EOF
+{
+  "srcFs": "$DIR_PATH",
+  "dstFs": "${REMOTE_PATH}${BASE_NAME}/",
+  "_async": true,
+  "_config": {
+    "BufferSize": "96M",
+    "IgnoreExisting": true,
+    "SizeOnly": true,
+    "Retries": 999,
+    "Transfers": 2,
+    "Checkers": 4
+  }
+}
+EOF
 }
 
 
 while true; do
-
-    difference=$(($(cat $QUEUE_FILE | wc -l)-$(cat $FINISHED_FILE | wc -l)))
-
-    # Check if queue file exists and is not empty
-    if [[ $difference -gt 0 ]]; then
-        cat $QUEUE_FILE | tail -n${difference} | while IFS= read -r line; do
+    # Check if paths exists and is not empty
+    if (( $( /usr/bin/sqlite3 "$DB_PATH" "SELECT COUNT(path) FROM paths" ) != 0 )); then
+        /usr/bin/sqlite3 "$DB_PATH" "SELECT path FROM paths LIMIT 1" | while IFS= read -r line; do
             echo "[Queue Watchdog] Processing: $line" >> $LOG_FILE
 
             # uploading file
@@ -79,24 +120,8 @@ while true; do
                 fi
 
                 # Make API request
-                curl -u "${RCLONE_USERNAME}:${RCLONE_PASSWORD}" -X POST "http://127.0.0.1:61801/operations/movefile" \
-                    -H "Content-Type: application/json" \
-                    -d @- <<EOF
-{
-  "srcFs": "$BASE_DIR",
-  "srcRemote": "$FILE_NAME",
-  "dstFs": "$REMOTE_PATH",
-  "dstRemote": "$FILE_NAME",
-  "_async": true,
-  "_config": {
-    "BufferSize": "96M",
-    "IgnoreExisting": true,
-    "SizeOnly": true,
-    "Retries": 999
-  }
-}
-EOF
-                sleep 2
+                call_upload_file_api "$RCLONE_USERNAME" "$RCLONE_PASSWORD" "$BASE_DIR" "$FILE_NAME" "$REMOTE_PATH"
+                sleep 5
                 echo "[Queue Watchdog] Rclone Job Created For: $line" >> $LOG_FILE
                 check_rclone_activity
             
@@ -124,24 +149,8 @@ EOF
                 fi
 
                 # Make API request
-                curl -u "${RCLONE_USERNAME}:${RCLONE_PASSWORD}" -X POST "http://127.0.0.1:61801/sync/${MODE}" \
-                    -H "Content-Type: application/json" \
-                    -d @- <<EOF
-{
-  "srcFs": "$DIR_PATH",
-  "dstFs": "${REMOTE_PATH}${BASE_NAME}/",
-  "_async": true,
-  "_config": {
-    "BufferSize": "96M",
-    "IgnoreExisting": true,
-    "SizeOnly": true,
-    "Retries": 999,
-    "Transfers": 2,
-    "Checkers": 4
-  }
-}
-EOF
-                sleep 2
+                call_upload_folder_api "$RCLONE_USERNAME" "$RCLONE_PASSWORD" "$DIR_PATH" "$REMOTE_PATH" "$BASE_NAME"
+                sleep 5
                 echo "[Queue Watchdog] Rclone Job Created For: $line" >> $LOG_FILE
                 check_rclone_activity
 
@@ -150,9 +159,9 @@ EOF
             fi
 
 
-            # Remove the processed file from the queue list
-            echo "[Queue Watchdog] Task Completed: $line" >> $LOG_FILE
-            echo "$line" >> $FINISHED_FILE
+            # Remove the processed path from the database
+            safe_name=$(printf "%s" "$line" | sed "s/'/''/g")
+            /usr/bin/sqlite3 "$DB_PATH" "DELETE FROM paths WHERE path='${safe_name}'"
         done
     fi
 

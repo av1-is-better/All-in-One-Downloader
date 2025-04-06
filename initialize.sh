@@ -1,6 +1,9 @@
 #!/bin/bash
 # Setting up Password
 
+# Initializing paths.db file
+/usr/bin/sqlite3 "/app/config/paths.db" "CREATE TABLE IF NOT EXISTS paths(path TEXT)"
+
 # Checking Google config
 if grep -q '^\[Google\]' /app/config/rclone.conf; then
     echo "Google: remote present in rclone config"
