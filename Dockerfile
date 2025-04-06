@@ -27,7 +27,7 @@ COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 COPY VueTorrent.zip /app/VueTorrent.zip
-RUN unzip /app/VueTorrent.zip -d /app/
+RUN unzip /app/VueTorrent.zip -d /var/www/
 RUN rm /app/VueTorrent.zip
 
 # Copying Script (Bash Scripts)
@@ -48,6 +48,10 @@ RUN mkdir -p /app/downloads/.torrent
 # Copying AriaNG-HTML
 RUN mkdir -p /var/www/aria
 COPY ariang/ /var/www/aria/
+
+# Copying Rclone_RCD_WebUI-HTML
+RUN mkdir -p /var/www/rcd-webui
+COPY rcd-webui/ /var/www/rcd-webui/
 
 # Copying homer
 RUN mkdir -p /var/www/homer

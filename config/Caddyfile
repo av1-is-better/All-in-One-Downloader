@@ -1,3 +1,9 @@
+{
+        log {
+                exclude http.handlers.reverse_proxy
+        }
+}
+
 :{$PORT}
 encode gzip
 
@@ -17,13 +23,6 @@ route {
 		uri strip_prefix /home
 		root * /var/www/homer
 		file_server
-	}
-
-	# Configure rclone
-	handle /app/rclone* {
-		redir /app/rclone /app/rclone/
-		uri strip_prefix /app/rclone
-		reverse_proxy * 127.0.0.1:61801
 	}
 
 	# Configure ttyd
@@ -53,7 +52,7 @@ route {
 		handle /api* {
 			reverse_proxy * localhost:61804
 		}
-		root * /app/VueTorrent/public
+		root * /var/www/VueTorrent/public
 		file_server
 	}
 
@@ -64,10 +63,21 @@ route {
 		root * /var/www/aria
 		file_server
 	}
+}
 
-	# Configure Aria-RPC
+# Configure Aria-RPC
 	handle /app/rpc* {
 		uri strip_prefix /app/rpc
 		reverse_proxy * localhost:61805
-	}
 }
+
+# Configure rclone
+	handle /app/rclone* {
+		redir /app/rclone /app/rclone/
+		uri strip_prefix /app/rclone
+		handle /rcd* {
+			reverse_proxy * localhost:61801
+		}
+		root * /var/www/rcd-webui
+		file_server
+	}
