@@ -32,12 +32,6 @@ route {
 		reverse_proxy * localhost:61802
 	}
 
-	# Configure Filebrowser
-	handle /app/files* {
-		redir /app/files /app/files/
-		reverse_proxy * localhost:61803
-	}
-
 	# Configure qbittorrent
 	handle /app/qbit* {
 		redir /app/qbit /app/qbit/
@@ -73,12 +67,18 @@ route {
 
 # Configure rclone
 	handle /app/rclone* {
-		redir /app/rclone /app/rclone/
-		uri strip_prefix /app/rclone
-		handle /rcd* {
-			uri strip_prefix /rcd
-			reverse_proxy * localhost:61801
-		}
-		root * /var/www/rcd-webui
-		file_server
+	redir /app/rclone /app/rclone/
+	uri strip_prefix /app/rclone
+	handle /rcd* {
+		uri strip_prefix /rcd
+		reverse_proxy * localhost:61801
 	}
+	root * /var/www/rcd-webui
+	file_server
+}
+
+# Configure Filebrowser
+	handle /app/files* {
+	redir /app/files /app/files/
+	reverse_proxy * localhost:61803
+}
