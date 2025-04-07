@@ -58,7 +58,7 @@ route {
 
 	# Configure Aria(Web UI)
 	handle /app/aria* {
-		redir /app/aria /app/aria/
+		redir /app/aria /app/aria/#!/settings/rpc/set?secret=BASE64_ENCODED_PASSWORD_HERE
 		uri strip_prefix /app/aria
 		root * /var/www/aria
 		file_server

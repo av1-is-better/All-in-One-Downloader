@@ -67,7 +67,7 @@ if grep -q "GLOBALPASSWORDHERE" "$ARIA_CONFIG_FILE"; then
 fi
 
 # ariang html (replacing port and RPC token in js file)
-ARIANG_JS_FILE="/var/www/aria/js/aria-ng-ff0f4540ce.min.js"
+ARIANG_JS_FILE="/var/www/aria/js/aria-ng-6b4016004c.min.js"
 UNTOUCHED_FILE="/var/www/aria/js/aria-ng-untouched.js"
 if [[ -f "$ARIANG_JS_FILE" ]]; then
     if [[ -f "$UNTOUCHED_FILE" ]]; then
@@ -131,6 +131,8 @@ if [[ -f "$UNTOUCHED_CADDY_FILE" ]]; then
     cp "$UNTOUCHED_CADDY_FILE" "$CADDY_FILE"
     HASHED_CADDY_PASSWORD=$(echo $GLOBAL_PASSWORD | /usr/sbin/caddy hash-password)
     sed -i "s|HASHED_PASSWORD|${HASHED_CADDY_PASSWORD//|/\\|}|g" "$CADDY_FILE"
+    BASE64_ENCODED_PASSWORD=$(echo $GLOBAL_PASSWORD | base64)
+    sed -i "s|BASE64_ENCODED_PASSWORD_HERE|${BASE64_ENCODED_PASSWORD//|/\\|}|g" "$CADDY_FILE"
 else
     echo "[Error] Caddy Untouched File Missing."
     exit 1
