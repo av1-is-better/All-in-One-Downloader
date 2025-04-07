@@ -55,11 +55,6 @@ route {
 		root * /var/www/VueTorrent/public
 		file_server
 	}
-	
-	# Configure Aria(Init RPC)
-	handle /app/init-rpc* {
-		redir /app/init-rpc /app/aria/#!/settings/rpc/set?secret=BASE64_ENCODED_PASSWORD_HERE
-	}
 
 	# Configure Aria(Web UI)
 	handle /app/aria* {
