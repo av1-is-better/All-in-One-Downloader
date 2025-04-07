@@ -85,19 +85,6 @@ if [[ -f "$ARIANG_JS_FILE" ]]; then
             exit 1
         fi
     fi
-
-    # Setting RPC SECRET
-    if grep -q "YOURRPCSECRETHERE" "$ARIANG_JS_FILE"; then
-        if [ -n "$GLOBAL_PASSWORD" ]; then
-            BASE64_ENCODED_PASSWORD=$(echo -n "$GLOBAL_PASSWORD" | base64 | tr -d '\n')
-            sed -i "s|YOURRPCSECRETHERE|$BASE64_ENCODED_PASSWORD|g" "$ARIANG_JS_FILE"
-            echo "RPC Secret updated successfully in aria config."
-        else
-            echo "[Error] GLOBAL_PASSWORD environment variable is not set."
-            echo "Please Set GLOBAL_PASSWORD env in docker-compose.yml"
-            exit 1
-        fi
-    fi
 else
     echo "Ariang js file does not exist: ${ARIANG_JS_FILE}"
     exit 1
@@ -131,7 +118,7 @@ if [[ -f "$UNTOUCHED_CADDY_FILE" ]]; then
     cp "$UNTOUCHED_CADDY_FILE" "$CADDY_FILE"
     HASHED_CADDY_PASSWORD=$(echo $GLOBAL_PASSWORD | /usr/sbin/caddy hash-password)
     sed -i "s|HASHED_PASSWORD|${HASHED_CADDY_PASSWORD//|/\\|}|g" "$CADDY_FILE"
-    BASE64_ENCODED_PASSWORD=$(echo $GLOBAL_PASSWORD | base64)
+    BASE64_ENCODED_PASSWORD=$(echo $GLOBAL_PASSWORD | base64 | tr -d '=')
     sed -i "s|BASE64_ENCODED_PASSWORD_HERE|${BASE64_ENCODED_PASSWORD//|/\\|}|g" "$CADDY_FILE"
 else
     echo "[Error] Caddy Untouched File Missing."
