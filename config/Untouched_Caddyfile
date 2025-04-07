@@ -63,6 +63,7 @@ route {
 
 	# Configure Aria(Web UI)
 	handle /app/aria* {
+		redir /app/aria /app/aria/
 		uri strip_prefix /app/aria
 		root * /var/www/aria
 		file_server
