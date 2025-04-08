@@ -67,7 +67,7 @@ if grep -q "GLOBALPASSWORDHERE" "$ARIA_CONFIG_FILE"; then
 fi
 
 # ariang html (replacing port and RPC token in js file)
-ARIANG_JS_FILE="/var/www/aria/js/aria-ng-be8fab6915.min.js"
+ARIANG_JS_FILE="/var/www/aria/js/aria-ng-beeec8adf6.min.js"
 UNTOUCHED_FILE="/var/www/aria/js/aria-ng-untouched.js"
 if [[ -f "$ARIANG_JS_FILE" ]]; then
     if [[ -f "$UNTOUCHED_FILE" ]]; then
