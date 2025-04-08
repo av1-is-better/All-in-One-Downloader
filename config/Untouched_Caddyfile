@@ -50,6 +50,14 @@ route {
 		file_server
 	}
 
+	# Configure Pixel Downloader UI
+	handle /app/pixel* {
+		uri strip_prefix /app/pixel
+		redir /app/pixel /app/pixel/?secret=RPC_PASSWORD_HERE
+		root * /var/www/pixel
+		file_server
+	}
+
 	# Configure Aria(Web UI)
 	handle /app/aria* {
 		redir /app/aria /app/aria/

@@ -56,6 +56,11 @@ COPY web-ui/rcd-webui.zip /app/rcd-webui.zip
 RUN unzip /app/rcd-webui.zip -d /var/www/
 RUN rm /app/rcd-webui.zip
 
+# Copying Pixel-HTML
+COPY web-ui/pixel.zip /app/pixel.zip
+RUN unzip /app/pixel.zip -d /var/www/
+RUN rm /app/pixel.zip
+
 # Copying homer
 RUN mkdir -p /var/www/homer
 COPY homer/ /var/www/homer/
