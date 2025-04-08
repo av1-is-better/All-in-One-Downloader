@@ -48,13 +48,14 @@ if grep -q "HASHPASSWORDHERE" "$QBIT_CONFIG_FILE"; then
 fi
 
 # aria RPC config
+RANDOM_RPC_SECRET=$(head -c 200 /dev/urandom | tr -dc 'A-Za-z0-9' | head -c $((RANDOM % 16 + 30)))
 ARIA_CONFIG_FILE="/app/config/aria2.conf"
 # Resetting Password in config file
 grep -q '^rpc-secret=' $ARIA_CONFIG_FILE && sed -i 's|^rpc-secret=.*|GLOBALPASSWORDHERE|' $ARIA_CONFIG_FILE
 # Check if "GLOBALPASSWORDHERE" exists in the file
 if grep -q "GLOBALPASSWORDHERE" "$ARIA_CONFIG_FILE"; then
     # Generate hashed password
-    RPC_SECRET="rpc-secret=${GLOBAL_PASSWORD}"
+    RPC_SECRET="rpc-secret=${RANDOM_RPC_SECRET}"
 
     # Ensure it is not empty (avoid corrupting config)
     if [ -n "$RPC_SECRET" ]; then
@@ -67,7 +68,7 @@ if grep -q "GLOBALPASSWORDHERE" "$ARIA_CONFIG_FILE"; then
 fi
 
 # ariang html (replacing port and RPC token in js file)
-ARIANG_JS_FILE="/var/www/aria/js/aria-ng-beeec8adf6.min.js"
+ARIANG_JS_FILE="/var/www/aria/js/aria-ng-a2eaccc40b.min.js"
 UNTOUCHED_FILE="/var/www/aria/js/aria-ng-untouched.js"
 if [[ -f "$ARIANG_JS_FILE" ]]; then
     if [[ -f "$UNTOUCHED_FILE" ]]; then
@@ -118,8 +119,7 @@ if [[ -f "$UNTOUCHED_CADDY_FILE" ]]; then
     cp "$UNTOUCHED_CADDY_FILE" "$CADDY_FILE"
     HASHED_CADDY_PASSWORD=$(echo $GLOBAL_PASSWORD | /usr/sbin/caddy hash-password)
     sed -i "s|HASHED_PASSWORD|${HASHED_CADDY_PASSWORD//|/\\|}|g" "$CADDY_FILE"
-    BASE64_ENCODED_PASSWORD=$(echo $GLOBAL_PASSWORD | base64 | tr -d '=')
-    sed -i "s|BASE64_ENCODED_PASSWORD_HERE|${BASE64_ENCODED_PASSWORD//|/\\|}|g" "$CADDY_FILE"
+    sed -i "s|RPC_PASSWORD_HERE|${RANDOM_RPC_SECRET//|/\\|}|g" "$CADDY_FILE"
 else
     echo "[Error] Caddy Untouched File Missing."
     exit 1

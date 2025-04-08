@@ -47,9 +47,9 @@ RUN unzip /app/vue-torrent.zip -d /var/www/
 RUN rm /app/vue-torrent.zip
 
 # Copying AriaNG-HTML
-COPY web-ui/ariang.zip /app/ariang.zip
-RUN unzip /app/ariang.zip -d /var/www/
-RUN rm /app/ariang.zip
+COPY web-ui/aria.zip /app/aria.zip
+RUN unzip /app/aria.zip -d /var/www/
+RUN rm /app/aria.zip
 
 # Copying Rclone_RCD_WebUI-HTML
 COPY web-ui/rcd-webui.zip /app/rcd-webui.zip
