@@ -57,6 +57,11 @@ route {
 		root * /var/www/aria
 		file_server
 	}
+
+	# Configure Aria(Initialize RPC Token)
+	handle /app/init-aria* {
+		redir /app/init-aria /app/aria/#!/settings/rpc/set?secret=BASE64_ENCODED_PASSWORD_HERE
+	}
 }
 
 # Configure Aria-RPC
