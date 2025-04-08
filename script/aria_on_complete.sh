@@ -1,7 +1,7 @@
 #!/bin/bash
 
 GID="$1"
-RPC_SECRET="${GLOBAL_PASSWORD}"
+RPC_SECRET=$(cat "/app/config/.rpc_secret")
 RPC_URL="http://localhost:61805/jsonrpc"
 
 # Make the RPC API call to AriaRPC

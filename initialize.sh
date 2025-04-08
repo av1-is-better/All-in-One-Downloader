@@ -49,6 +49,7 @@ fi
 
 # aria RPC config
 RANDOM_RPC_SECRET=$(head -c 200 /dev/urandom | tr -dc 'A-Za-z0-9' | head -c $((RANDOM % 16 + 30)))
+echo $RANDOM_RPC_SECRET > "/app/config/.rpc_secret"
 ARIA_CONFIG_FILE="/app/config/aria2.conf"
 # Resetting Password in config file
 grep -q '^rpc-secret=' $ARIA_CONFIG_FILE && sed -i 's|^rpc-secret=.*|GLOBALPASSWORDHERE|' $ARIA_CONFIG_FILE
@@ -68,7 +69,7 @@ if grep -q "GLOBALPASSWORDHERE" "$ARIA_CONFIG_FILE"; then
 fi
 
 # ariang html (replacing port and RPC token in js file)
-ARIANG_JS_FILE="/var/www/aria/js/aria-ng-496d64e6db.min.js"
+ARIANG_JS_FILE="/var/www/aria/js/aria-ng-432476a2e5.min.js"
 UNTOUCHED_FILE="/var/www/aria/js/aria-ng-untouched.js"
 if [[ -f "$ARIANG_JS_FILE" ]]; then
     if [[ -f "$UNTOUCHED_FILE" ]]; then
