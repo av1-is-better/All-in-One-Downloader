@@ -1,20 +1,5 @@
 FROM kunu89/aio-alpine
 
-# Installing apache2 for htpasswd and sqlite3
-RUN apk add --no-cache \
-    apache2-utils \
-    sqlite \
-    tar \
-    xz \
-    curl \
-    bash \
-    build-base \
-    libffi-dev \
-    openssl-dev \
-    git \
-    nodejs \
-    npm
-
 # Copy all bin files to /usr/bin/
 COPY bin/ /usr/bin/
 

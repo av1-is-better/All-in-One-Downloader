@@ -13,7 +13,16 @@ RUN apk update && apk add --no-cache \
     jq \
     rclone \
     qbittorrent-nox \
-    aria2
+    aria2 \
+    apache2-utils \
+    sqlite \
+    tar \
+    xz \
+    libffi-dev \
+    openssl-dev \
+    git \
+    nodejs \
+    npm
 
 # Installing File Browser
 RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
