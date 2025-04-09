@@ -58,6 +58,14 @@ route {
 		file_server
 	}
 
+	# Configure Google Downloader UI
+	handle /app/google* {
+		uri strip_prefix /app/google
+		redir /app/google /app/google/?secret=RPC_PASSWORD_HERE
+		root * /var/www/google
+		file_server
+	}
+
 	# Configure Aria(Web UI)
 	handle /app/aria* {
 		redir /app/aria /app/aria/
@@ -94,4 +102,10 @@ route {
 	handle /app/files* {
 	redir /app/files /app/files/
 	reverse_proxy * localhost:61803
+}
+
+# Configure Express API Server
+	handle /app/api* {
+	uri strip_prefix /app/api
+	reverse_proxy * localhost:3000
 }

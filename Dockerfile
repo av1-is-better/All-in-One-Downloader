@@ -1,7 +1,19 @@
 FROM kunu89/aio-alpine
 
 # Installing apache2 for htpasswd and sqlite3
-RUN apk add --no-cache apache2-utils sqlite
+RUN apk add --no-cache \
+    apache2-utils \
+    sqlite \
+    tar \
+    xz \
+    curl \
+    bash \
+    build-base \
+    libffi-dev \
+    openssl-dev \
+    git \
+    nodejs \
+    npm
 
 # Copy all bin files to /usr/bin/
 COPY bin/ /usr/bin/
@@ -29,12 +41,12 @@ RUN chmod +x /app/entrypoint.sh
 # Copying Script (Bash Scripts)
 RUN mkdir -p "/app/script"
 COPY script/ /app/script/
-RUN chmod +x /app/script/*
+RUN chmod -R +x /app/script/*
 
 # Copying Services (nohup bash files)
 RUN mkdir -p "/app/services"
 COPY services/ /app/services/
-RUN chmod +x /app/services/*
+RUN chmod -R +x /app/services/*
 
 # Copying Config Files
 RUN mkdir -p /app/config
@@ -61,6 +73,11 @@ COPY web-ui/pixel.zip /app/pixel.zip
 RUN unzip /app/pixel.zip -d /var/www/
 RUN rm /app/pixel.zip
 
+# Copying Pixel-HTML
+COPY web-ui/google.zip /app/google.zip
+RUN unzip /app/google.zip -d /var/www/
+RUN rm /app/google.zip
+
 # Copying homer
 RUN mkdir -p /var/www/homer
 COPY homer/ /var/www/homer/
@@ -73,5 +90,9 @@ RUN mkdir -p /app/.temp
 COPY initialize.sh /app/initialize.sh
 RUN chmod +x /app/initialize.sh
 
+# Installing Node Modules For API Server
+RUN chmod +x /app/script/api/install.sh
+RUN /bin/bash /app/script/api/install.sh
+
 # Use entrypoint to start services and keep container alive
-ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]

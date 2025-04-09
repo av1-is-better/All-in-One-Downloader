@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Initializing Password For qbit, aria, filebrowser
 # Check if GLOBAL_PASSWORD is set
